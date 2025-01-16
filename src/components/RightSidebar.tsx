@@ -15,8 +15,8 @@ export function RightSidebar({sidebarImage}) {
                         a reader will be distracted
                     </h5>
                     {[
-                        'Field inspection completed. (Date: 2024-12-05)',
-                        'Crop analysis started. (Date: 2024-12-06)',
+                        'Fields inspection completed. (Date: 2024-12-05)',
+                        'Crops analysis started. (Date: 2024-12-06)',
                     ].map((log, index) => (
                         <div key={index} className="mb-3 px-5">
                             <p className="text-white text-sm">{log}</p>

@@ -30,40 +30,34 @@ export function Vehicle() {
                         onChange={handleChange}
                     />
                     <Inputs
-                        label="Crop Common Name"
-                        placeholder="Enter crop common name"
-                        name="commonName"
-                        value={formData.commonName || ''}
+                        label="License Plate Number"
+                        placeholder="Enter license plate number"
+                        name="licenseNumber"
+                        value={formData.licenseNumber || ''}
                         onChange={handleChange}
                     />
                     <Inputs
-                        label="Crop Scientific Name"
-                        placeholder="Enter crop scientific name"
-                        name="scientificName"
-                        value={formData.scientificName || ''}
+                        label="Crops Fuel Type"
+                        placeholder="Enter fuel type"
+                        name="fuelType"
+                        value={formData.fuelType || ''}
                         onChange={handleChange}
                     />
                     <Inputs
-                        label="Crop Season"
-                        placeholder="Enter crop season"
-                        name="season"
-                        value={formData.season || ''}
+                        label="Vehicle Catrgory"
+                        placeholder="Enter category"
+                        name="vehicleCaegory"
+                        value={formData.vehicleCaegory || ''}
                         onChange={handleChange}
                     />
                     <Inputs
-                        label="Crop Category"
-                        placeholder="Enter crop category"
-                        name="category"
-                        value={formData.category || ''}
+                        label="Remark"
+                        placeholder="Enter special remark if you have"
+                        name="remark"
+                        value={formData.remark || ''}
                         onChange={handleChange}
                     />
-                    <Inputs
-                        label="Field"
-                        placeholder="Select a field"
-                        name="field"
-                        value={formData.field || ''}
-                        onChange={handleChange}
-                    />
+
                 </div>
                 <AddButton/>
 

@@ -14,7 +14,7 @@ export function RootLayout() {
             <div className="flex">
                 <Navigation setSearchLabel={setSearchLabel} setImage={setImage} />
 
-                <div className="flex-grow mx-64 ml-64 mr-72 bg-[#F1F7F7] p-10 h-[970px]">
+                <div className="flex-grow mx-64 ml-64 mr-72 bg-[#F1F7F7] p-10 min-h-[970px]">
                     <Header searchLabel={searchLabel}/>
                     <main>
                         <Outlet/>

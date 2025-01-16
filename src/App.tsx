@@ -4,8 +4,8 @@ import {RootLayout} from "./components/RootLayout.tsx";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {Login} from "./pages/Login.tsx";
 import {Dashboard} from "./pages/Dashboard.tsx";
-import {Crop} from "./pages/Crop.tsx";
-import {Field} from "./pages/Field.tsx";
+import {Crops} from "./pages/Crops.tsx";
+import {Fields} from "./pages/Fields.tsx";
 import {Vehicle} from "./pages/Vehicle.tsx";
 import {Equipment} from "./pages/Equipment.tsx";
 import {Staff} from "./pages/Staff.tsx";
@@ -19,8 +19,8 @@ function App() {
       element : <RootLayout/>,
       children : [
         { path : '', element : <Dashboard/>},
-        { path : '/crop', element : <Crop/>},
-        { path : '/fields', element : <Field/>},
+        { path : '/crop', element : <Crops/>},
+        { path : '/fields', element : <Fields/>},
         { path : '/vehicles', element : <Vehicle/>},
         { path : '/equipment', element : <Equipment/>},
         { path : '/staff', element : <Staff/>},

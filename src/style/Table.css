@@ -1,0 +1,10 @@
+.custom-table-td {
+    @apply border border-gray-400
+    text-center
+}
+
+.custom-table-th {
+    @apply border border-gray-400
+    text-center font-extrabold
+    bg-white
+}

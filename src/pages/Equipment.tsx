@@ -38,7 +38,7 @@ export function Equipment() {
                         onChange={handleChange}
                     />
                     <Inputs
-                        label="Crop Type"
+                        label="Crops Type"
                         placeholder="Enter Equipment Type"
                         name="type"
                         value={formData.type || ''}
