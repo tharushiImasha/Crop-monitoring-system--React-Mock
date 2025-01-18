@@ -1,16 +1,26 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Inputs} from "../components/Inputs.tsx";
-import {updateFormData} from "../reducers/FormSlice.ts";
+import {resetFormData, updateFormData} from "../reducers/FormSlice.ts";
 import {AddButton} from "../components/AddButton.tsx";
 import {useState} from "react";
 import {Field} from "../models/Field.ts";
-import {addField} from "../reducers/FieldSlice.ts";
+import {addField, deleteField, updateField} from "../reducers/FieldSlice.ts";
+import {PencilSquareIcon} from "@heroicons/react/24/outline";
+import {TrashIcon} from "@heroicons/react/16/solid";
+import "../style/Table.css"
+import {addCrop, deleteCrop, updateCrop} from "../reducers/CropSlice.ts";
+import {Crop} from "../models/Crop.ts";
 
 export function Fields() {
 
     const dispatch = useDispatch();
     const formData = useSelector((state) => state.formData);
     const fields = useSelector((state) => state.field );
+
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editFieldId, setEditFieldId] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview_2, setImagePreview_2] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,18 +29,57 @@ export function Fields() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
-        dispatch(addField(formData));
+        if (isEditing && editFieldId) {
+            const updatedFields = { ...formData, crop_code: editFieldId };
+            dispatch(updateField(updatedFields));
+            setIsEditing(false);
+            setEditFieldId(null);
+            setImagePreview(null);
+            setImagePreview_2(null);
+            dispatch(resetFormData());
+        } else {
+            console.log(formData);
+            dispatch(resetFormData());
+            setImagePreview(null);
+            setImagePreview_2(null);
+            dispatch(addField(formData));
+        }
     };
 
-    const [imagePreview, setImagePreview] = useState(null);
-    const [imagePreview_2, setImagePreview_2] = useState(null);
+    function handleDelete(e, field: Field) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!field.fieldCode) {
+            alert("Field code is required to delete an item.");
+            return;
+        }
+
+        const confirmDelete = window.confirm(
+            `Are you sure you want to delete field "${field.fieldName}" (${field.fieldCode})?`
+        );
+
+        if (confirmDelete) {
+            try {
+                dispatch(deleteField(field));
+            } catch (error) {
+                console.log(error)
+                alert('Failed to delete field. Please try again.');
+            }
+
+        }
+
+    }
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = () => setImagePreview(reader.result);
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+                dispatch(updateFormData({name: "image1", value: reader.result}));
+            };
             reader.readAsDataURL(file);
         }
     };
@@ -39,9 +88,43 @@ export function Fields() {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = () => setImagePreview_2(reader.result);
+            reader.onloadend = () => {
+                setImagePreview_2(reader.result);
+                dispatch(updateFormData({name: "image2", value: reader.result}));
+            }
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleEditClick = (e: React.MouseEvent, field: Field) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log('Starting edit process for field:', field.fieldCode);
+
+        setIsEditing(true);
+        setEditFieldId(field.fieldCode);
+
+        setTimeout(() => {
+            const fieldFields = [
+                "fieldCode",
+                "fieldName",
+                "location",
+                "extentSize",
+                "image1",
+                "image2",
+            ];
+
+            fieldFields.forEach(data => {
+                dispatch(updateFormData({
+                    name: data,
+                    value: field[data] || ''
+                }));
+            });
+
+            setImagePreview(field.image1 || null);
+            setImagePreview_2(field.image2 || null);
+        }, 0);
     };
 
 
@@ -53,8 +136,8 @@ export function Fields() {
                     <Inputs
                         label="Fields ID"
                         placeholder="Enter field ID"
-                        name="fieldId"
-                        value={formData.fieldId || ''}
+                        name="fieldCode"
+                        value={formData.fieldCode || ''}
                         onChange={handleChange}
                     />
                     <Inputs
@@ -74,8 +157,8 @@ export function Fields() {
                     <Inputs
                         label="Extend Size of the Fields"
                         placeholder="Enter the size of the field"
-                        name="size"
-                        value={formData.size || ''}
+                        name="extentSize"
+                        value={formData.extentSize || ''}
                         onChange={handleChange}
                     />
 
@@ -143,20 +226,20 @@ export function Fields() {
 
                 </div>
 
-                <AddButton/>
+                <AddButton name={isEditing ? "Update" : "Register"}/>
 
                 <section className="filed-table-sec">
                     <div className="field-table-div">
                         <table className="table-auto w-full border-collapse border border-gray-300">
                             <thead>
                             <tr>
-                                <th>Fields ID</th>
-                                <th>Fields Name</th>
-                                <th>Fields Location</th>
-                                <th>Extend Size</th>
-                                <th>Fields</th>
-                                <th>Image 2</th>
-                                <th>Action</th>
+                                <th className="custom-table-th">Field ID</th>
+                                <th className="custom-table-th">Field Name</th>
+                                <th className="custom-table-th">Location</th>
+                                <th className="custom-table-th">Extend Size</th>
+                                <th className="custom-table-th">Image 1</th>
+                                <th className="custom-table-th">Image 2</th>
+                                <th className="custom-table-th">Action</th>
                             </tr>
                             </thead>
                             <tbody id="my-table">
@@ -164,20 +247,47 @@ export function Fields() {
                             {fields.map((field: Field) => (
                                 <tr>
                                     <td className="custom-table-td">{field.fieldCode}</td>
-                                    <td className="custom-table-td text-gray-600">
+                                    <td className="custom-table-td">
                                         {field.fieldName}
                                     </td>
-                                    <td className="custom-table-td">{field.fieldLocation}</td>
+                                    <td className="custom-table-td">{field.location}</td>
                                     <td className="custom-table-td">{field.extentSize}</td>
-                                    <td className="custom-table-td">{field.fieldName}</td>
-                                    {/*<td className="custom-table-td flex justify-center items-center">*/}
-                                    {/*    <button*/}
-                                    {/*        onClick={() => handleEditClick(customer)}*/}
-                                    {/*        className="bg-cyan-500 text-white px-4 py-2 w-20 rounded hover:bg-cyan-700"*/}
-                                    {/*    >*/}
-                                    {/*        Edit*/}
-                                    {/*    </button>*/}
-                                    {/*</td>*/}
+                                    <td className="custom-table-td">
+                                        {field.image1 ? (
+                                            <img
+                                                src={field.image1}
+                                                alt="field_1"
+                                                className="w-20 h-20 object-cover"
+                                            />
+                                        ) : (
+                                            "No Image"
+                                        )}
+                                    </td>
+                                    <td className="custom-table-td">
+                                        {field.image2 ? (
+                                            <img
+                                                src={field.image2}
+                                                alt="field_2"
+                                                className="w-20 h-20 object-cover"
+                                            />
+                                        ) : (
+                                            "No Image"
+                                        )}
+                                    </td>
+                                    <td className="custom-table-td flex flex-col gap-1 justify-center items-center h-auto">
+                                        <button
+                                            onClick={(e) => handleEditClick(e, field)}
+                                            className="bg-[#fde047] text-black px-4 py-2 mt-1 rounded hover:bg-[#fef08a]"
+                                        >
+                                            <PencilSquareIcon className="w-5 h-5 "/>
+                                        </button>
+                                        <button
+                                            onClick={(e) => handleDelete(e, field)}
+                                            className="bg-[#ef4444] text-black px-4 py-2 mt-1 rounded hover:bg-[#f87171]"
+                                        >
+                                            <TrashIcon className="w-5 h-5 "/>
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
 
