@@ -1,5 +1,5 @@
 import {Crop} from "./Crop.ts";
-import {Logs} from "./Logs.ts";
+import {Log} from "./Log.ts";
 import {Staff} from "./Staff.ts";
 import {Equipment} from "./Equipment.ts";
 
@@ -12,11 +12,11 @@ export class Field {
     image2: string;
     cropDTOS: Crop[];
     staffDTOS: Staff[];
-    logsDTOS: Logs[];
+    logsDTOS: Log[];
     equipmentDTOS: Equipment[];
 
 
-    constructor(fieldCode: string, fieldName: string, location: string, extentSize: number, image1: string, image2: string, cropDTOS: Crop[], staffDTOS: Staff[], logsDTOS: Logs[], equipmentDTOS: Equipment[]) {
+    constructor(fieldCode: string, fieldName: string, location: string, extentSize: number, image1: string, image2: string, cropDTOS: Crop[], staffDTOS: Staff[], logsDTOS: Log[], equipmentDTOS: Equipment[]) {
         this.fieldCode = fieldCode;
         this.fieldName = fieldName;
         this.location = location;

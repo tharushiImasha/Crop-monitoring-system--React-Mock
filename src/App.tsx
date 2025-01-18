@@ -6,9 +6,9 @@ import {Login} from "./pages/Login.tsx";
 import {Dashboard} from "./pages/Dashboard.tsx";
 import {Crops} from "./pages/Crops.tsx";
 import {Fields} from "./pages/Fields.tsx";
-import {Vehicle} from "./pages/Vehicle.tsx";
-import {Equipment} from "./pages/Equipment.tsx";
-import {Staff} from "./pages/Staff.tsx";
+import {Vehicles} from "./pages/Vehicles.tsx";
+import {Equipments} from "./pages/Equipments.tsx";
+import {Staffs} from "./pages/Staffs.tsx";
 import {Logs} from "./pages/Logs.tsx";
 
 function App() {
@@ -21,9 +21,9 @@ function App() {
         { path : '', element : <Dashboard/>},
         { path : '/crop', element : <Crops/>},
         { path : '/fields', element : <Fields/>},
-        { path : '/vehicles', element : <Vehicle/>},
-        { path : '/equipment', element : <Equipment/>},
-        { path : '/staff', element : <Staff/>},
+        { path : '/vehicles', element : <Vehicles/>},
+        { path : '/equipment', element : <Equipments/>},
+        { path : '/staff', element : <Staffs/>},
         { path : '/logs', element : <Logs/>}
       ]
     },
