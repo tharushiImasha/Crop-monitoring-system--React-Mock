@@ -1,16 +1,21 @@
 import {Link} from "react-router";
-import {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export function Navigation({ setSearchLabel, setImage }) {
     const location = useLocation();
     const [activePath, setActivePath] = useState(location.pathname);
+    const navigate = useNavigate();
 
     const handleLinkClick = (path, label, image) => {
         setActivePath(path);
         setSearchLabel(label);
         setImage(image);
     };
+
+    function logout() {
+        navigate('/');
+    }
 
     return (
         <>
@@ -21,7 +26,7 @@ export function Navigation({ setSearchLabel, setImage }) {
                 <nav className="flex flex-col items-cemter w-full px-4">
                     <ul className="list-none w-full flex flex-col items-start px-10 space-y-4">
                         {[
-                            { id: 'dashboard-btn', path: '/', icon: '/assets/Dashboard.png', label: 'Dashboard', image: '/assets/Dashboard-Side.png' },
+                            { id: 'dashboard-btn', path: '/dashboard', icon: '/assets/Dashboard.png', label: 'Dashboard', image: '/assets/Dashboard-Side.png' },
                             { id: 'crop-btn', path: '/crop', icon: '/assets/Crop.png', label: 'Crop', image: '/assets/Crop-img.png' },
                             { id: 'fields-btn', path: '/fields', icon: '/assets/Field.png', label: 'Fields', image: '/assets/Field-img.png' },
                             { id: 'staff-btn', path: '/staff', icon: '/assets/Staff.png', label: 'Staff', image: '/assets/Staff-img.png' },
@@ -49,7 +54,7 @@ export function Navigation({ setSearchLabel, setImage }) {
                     <div className="mt-24">
                         <button
                             id="logout"
-                            className="flex items-center gap-4 px-10 py-2 text-[#004463] hover:text-[#162635] transition"
+                            className="flex items-center gap-4 px-10 py-2 text-[#004463] hover:text-[#162635] transition" onClick={logout}
                         >
                             <img src="/assets/Logout.png" alt="Logout" className="w-6 h-6"/>
                             <span>Logout</span>

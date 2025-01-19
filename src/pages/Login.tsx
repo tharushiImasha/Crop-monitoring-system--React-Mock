@@ -1,87 +1,121 @@
-import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {Inputs} from "../components/Inputs.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import {LoginDetails} from "../models/LoginDetails.ts";
-import {checkUser} from "../reducers/LoginSlice.ts";
-import React from "react";
+import {updateFormData} from "../reducers/FormSlice.ts";
+import {useNavigate} from "react-router-dom";
 
 export function Login() {
 
-    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const formData = useSelector((state) => state.formData);
+    const user = useSelector((state) => state.user );
     const dispatch = useDispatch();
-    const user = useSelector((state) => state);
+    const navigate = useNavigate();
 
-    // function handleSubmit(user: LoginDetails) {
-    //     alert("Are you sure you want to delete?");
-    //     dispatch(checkUser(user.email, user.password));
-    //     navigate('/');
-    // }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(updateFormData({name, value}));
+    };
 
-    function handleSubmit(event: React.FormEvent) {
-        event.preventDefault(); // Prevent form default submission
-        const formData = new FormData(event.target as HTMLFormElement);
-        const email = formData.get("email");
-        const password = formData.get("password");
-
-        // Dispatch action to check user
-        const validUser = dispatch(checkUser({ email, password }));
-
-        if (validUser) {
-            alert("Login Successful!");
-            navigate("/"); // Navigate to the home page
-        } else {
-            alert("Invalid credentials. Try again!");
+    function loginDash() {
+        console.log(formData.email);
+        console.log(localStorage.getItem("email"));
+        if (formData.email === localStorage.getItem("email") && formData.password === localStorage.getItem("password")) {
+            navigate('/dashboard');
+        }else {
+            alert("Please enter a valid email address and password");
         }
+
+    }
+
+    function register() {
+        navigate('/register');
     }
 
     return (
-        <>
-            <div className="container" style="max-width: 1280px;">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+            <div className="flex rounded-lg shadow-lg overflow-hidden bg-white w-[1280px] h-[832px]">
 
-                <div className="login-form">
-                    <img src="/assets/Logo.png" alt="Green Shadow Logo" className="logo"/>
+                <div className="flex-1 p-12">
+                    <img
+                        src="/assets/Logo.png"
+                        alt="Green Shadow Logo"
+                        className="w-36 mb-[60px]"
+                    />
 
-                    <div className="login-inside">
+                    <div className="py-4 px-[60px]">
+                        <h1 className="text-[32px] font-semibold text-gray-800">Welcome back!</h1>
+                        <p className="text-gray-600">Let's Make Magic Happen</p>
 
-                        <h1>Welcome back!</h1>
-                        <p>Let's Make Magic Happen</p>
-
-                        <div className="social-login">
-                            <button className="google-login"><img src="/assets/google.png" alt=""/>Login with Google
+                        {/* Social Login */}
+                        <div className="flex gap-4 my-8 mt-[45px]">
+                            <button
+                                className="flex items-center justify-center w-full py-2 border rounded-lg text-sm font-medium gap-2">
+                                <img src="/assets/google.png" alt="Google" className="w-5"/>
+                                Login with Google
                             </button>
-                            <button className="apple-login"><img src="/assets/apple.png" alt=""/>Login with Apple
+                            <button
+                                className="flex items-center justify-center w-full py-2 border rounded-lg text-sm font-medium gap-2">
+                                <img src="/assets/apple.png" alt="Apple" className="w-5"/>
+                                Login with Apple
                             </button>
                         </div>
 
-                        <div className="or-line">
-                            <div className="line"></div>
-                            <h5>or</h5>
-                            <div className="line"></div>
+                        <div className="flex items-center gap-2 my-6">
+                            <div className="flex-grow h-px bg-gray-300"></div>
+                            <h5 className="text-xs text-gray-500">or</h5>
+                            <div className="flex-grow h-px bg-gray-300"></div>
                         </div>
 
-                        <form style="width: 463px;">
-                            <label htmlFor="username">Username or Email</label>
-                            <input type="text" id="username" placeholder="Enter your username/email"/>
+                        <form className="flex flex-col ">
+                            <Inputs
+                                label="Email"
+                                placeholder="Enter your email"
+                                name="email"
+                                value={formData.email || ''}
+                                onChange={handleChange}
+                            />
 
-                            <div className="pw-visible">
-                                <label htmlFor="password">Password</label>
-                                <input type="password" id="password" placeholder="Enter your password"/>
-                                <i className="ri-eye-off-line" id="toggle-password"></i>
-                            </div>
-
-                            <a href="#" className="forgot-password">Forgot Password?</a>
-                            <button type="submit" className="login-btn" id="login">Login</button>
+                            <Inputs
+                                label="Password"
+                                placeholder="Enter your password"
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={formData.password || ''}
+                                onChange={handleChange}
+                            />
+                            <a
+                                href="#"
+                                className="text-xs text-gray-500 hover:underline text-right"
+                            >
+                                Forgot Password?
+                            </a>
+                            <button
+                                type="button"
+                                className="mt-[50px] px-4 bg-[#162635] text-white rounded-[10px] hover:bg-[#004463] w-full h-[40px] flex items-center justify-center text-[15px] float-right" onClick={loginDash}>
+                                Login
+                            </button>
                         </form>
 
-                        <p className="register">Don't have an account? <a href="#" onClick={() => handleSubmit(user)}>Register
-                            now.</a></p>
+                        <p className="mt-6 text-xs text-gray-500 text-center">
+                            Don't have an account?{" "}
+                            <span className="text-[#162635] hover:underline cursor-pointer" onClick={register}>
+                                Register now.
+                            </span>
+                        </p>
                     </div>
 
                 </div>
 
-                <div className="login-image">
-                    <img src="/assets/Login.png" alt="Scenic Image"/>
+                <div className="hidden lg:flex flex-1 items-center justify-center bg-white p-[10px]">
+                    <img
+                        src="/assets/Login.png"
+                        alt="Scenic Image"
+                        className="w-full h-full object-cover rounded-lg"
+                    />
                 </div>
             </div>
-        </>
+        </div>
+
     );
 }

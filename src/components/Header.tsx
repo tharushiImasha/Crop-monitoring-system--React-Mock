@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export function Header({ searchLabel }) {
 
     const [currentDateTime, setCurrentDateTime] = useState<string>("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const updateDateTime = () => {
@@ -24,6 +26,10 @@ export function Header({ searchLabel }) {
         return () => clearInterval(intervalId);
     }, []);
 
+    const handleProfileClick = () => {
+        navigate('/profile'); // Navigate to the profile route
+    };
+
     return (
         <>
             <div className="fixed top-0 left-0 right-0 flex justify-between items-center bg-[transparent] p-10">
@@ -41,7 +47,7 @@ export function Header({ searchLabel }) {
 
                 <div className="flex items-center gap-4 mr-[280px]">
                     <span className="text-gray-500 text-sm">{currentDateTime}</span>
-                    <div className="w-8 h-8 rounded-full bg-teal-500 overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-teal-500 overflow-hidden cursor-pointer" onClick={handleProfileClick}>
                         <img
                             src="/assets/profilPic.png"
                             alt="Profile"

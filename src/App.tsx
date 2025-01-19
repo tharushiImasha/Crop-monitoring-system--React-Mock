@@ -10,6 +10,8 @@ import {Vehicles} from "./pages/Vehicles.tsx";
 import {Equipments} from "./pages/Equipments.tsx";
 import {Staffs} from "./pages/Staffs.tsx";
 import {Logs} from "./pages/Logs.tsx";
+import {Profile} from "./pages/Profile.tsx";
+import {Register} from "./pages/Register.tsx";
 
 function App() {
 
@@ -18,13 +20,16 @@ function App() {
       path: '',
       element : <RootLayout/>,
       children : [
-        { path : '', element : <Dashboard/>},
+        { path : '', element : <Login/>},
+        { path : '/register', element : <Register/>},
+        { path : '/dashboard', element : <Dashboard/>},
         { path : '/crop', element : <Crops/>},
         { path : '/fields', element : <Fields/>},
         { path : '/vehicles', element : <Vehicles/>},
         { path : '/equipment', element : <Equipments/>},
         { path : '/staff', element : <Staffs/>},
-        { path : '/logs', element : <Logs/>}
+        { path : '/logs', element : <Logs/>},
+        { path : '/profile', element : <Profile/>}
       ]
     },
   ])
